@@ -7,6 +7,18 @@ In _Concept.md_ file will be presented comparative analysis of three tools for d
 **Features**
 ### minikube
 
+- **Supported OS**
+    - Linux: Ubuntu, Debian, CentOS, Fedora, etc.
+    - macOS: Intel and Apple silicon.
+    - Windows: Windows 10/11 and Windows Server.
+    - Cloud & CI: GitHub Codespaces
+
+- **Supported Architecture**
+    - x86-64 / AMD64: Fully supported across Linux, macOS, and Windows.
+    - ARM64: Fully supported (Apple M1/M2/M3, Raspberry Pi and modern ARM-based cloud instances).
+    - ppc64 (PowerPC): Supported.
+    - S390x (IBM Z): Supported
+
 - **Automation Capabilities:**
 
   1. **Automated Creation:** Starts a fully configured local Kubernetes cluster in a virtual machine or container with one command =>
@@ -175,11 +187,32 @@ To check full information about minikube, click here:
 - https://minikube.sigs.k8s.io/docs/
 
 ### kind
+- **Supported OS**
+    - Linux: Ubuntu, Debian, CentOS, Fedora and other modern Linux distributions.
+    - macOS: Intel and Apple Silicon (ARM64).
+    - Windows: Windows 10/11 and Windows Server (typically via Docker Desktop or WSL2).
+    - Cloud & CI: GitHub Codespaces and CI/CD environments supporting Docker.
 
+- **Supported Architecture**
+    - x86-64 / AMD64: Fully supported across Linux, macOS, and Windows.
+    - ARM64: Fully supported (Apple Silicon: M1/M2/M3, ARM cloud instances).
+    - ppc64 / ppc64le: Supported on Linux (community/CI support, not always first-class).
+    - s390x (IBM Z): Supported on Linux (community/CI support).
 
-### k3s
+- **Automation Capabilities:**
 
+### k3d
+- **Supported OS**
+    - Linux: Ubuntu, Debian, CentOS, Fedora, and other modern Linux distributions with Docker support.
+    - macOS: Intel and Apple Silicon (ARM64) with Docker Desktop.
+    - Windows: Windows 10/11 (via WSL2 + Docker Desktop).
+    - Cloud & CI: GitHub Codespaces and other Docker-based CI environments.
 
+- **Supported Architecture**
+    - x86-64 / AMD64: Fully supported and primary target architecture.
+    - ARM64: Fully supported (Apple Silicon, ARM cloud instances).
+    - ppc64 (PowerPC): Not officially supported (may work in custom/community setups).
+    - s390x (IBM Z): Not officially supported (very limited or experimental support).
 
 **Advantages and Disadvantages**
 
