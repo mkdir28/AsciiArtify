@@ -3,11 +3,12 @@
 **AsciiArtify** plans to develop a new software product for converting images to ascii-art using Machine Learning.
 In _Concept.md_ file will be presented comparative analysis of three tools for deploying Kubernetes clusters in a local environment - minikube, kind and k3d.
 
+---
 
 ## Features
 ### minikube
 
-- **Supported OS**
+- **Supported OS** 
     - Linux: Ubuntu, Debian, CentOS, Fedora, etc.
     - macOS: Intel and Apple silicon.
     - Windows: Windows 10/11 and Windows Server.
@@ -190,6 +191,8 @@ To check full information about minikube, click here:
 
 - https://minikube.sigs.k8s.io/docs/
 
+---
+
 ### kind
 - **Supported OS**
     - Linux: Ubuntu, Debian, CentOS, Fedora and other modern Linux distributions.
@@ -247,6 +250,8 @@ To check full information about kind, click here:
 
 - https://kind.sigs.k8s.io
 
+---
+
 ### k3d
 - **Supported OS**
     - Linux: Ubuntu, Debian, CentOS, Fedora, and other modern Linux distributions with Docker support.
@@ -292,7 +297,7 @@ To check full information about kind, click here:
       Automatically bundles the lightweight Kubernetes `metrics-server` component into the runtime engine by default. This enables immediate out of the box usage of native commands like `kubectl top nodes` and `kubectl top pods` without manual installations.
 
    2. **Local APM Simulation**
-      Supports direct exposure of container endpoints, allowing automation scripts or developers to quickly attach Prometheus and Grafana targets to monitor cluster health and memory consumption locally.
+         Supports direct exposure of container endpoints, allowing automation scripts or developers to quickly attach Prometheus and Grafana targets to monitor cluster health and memory consumption locally.
 ---
 
 - **Additional Feature Kubernetes cluster management:**
@@ -316,7 +321,21 @@ To check full information about k3d, click here:
 
 - https://k3d.io/stable/
 
-**Advantages and Disadvantages**
+---
+
+## Advantages and Disadvantages**
+
+
+| Criteria | Minikube | Kind (Kubernetes IN Docker) | k3d (k3s in Docker) |
+| :--- | :--- | :--- | :--- |
+| **Ease of Use** | **Very High** Highly guided experience. Features a massive built-in add-on system (`minikube addons enable`) for easy setup of dashboards and metrics. | **Medium** Geared towards DevOps. Requires Docker knowledge and writing declarative YAML configurations to expose host ports or add ingress. | **High** Provides an excellent out-of-the-box experience. Comes pre-packaged with a LoadBalancer and Traefik Ingress. |
+| **Deployment Speed** | **Slow** Usually takes 2-5 minutes to boot, as it pulls heavier images and often relies on full virtualization. | **Fast** Usually ready in 30-60 seconds. Uses lightweight container provisioning. | **Fastest** Usually ready in 15-30 seconds. Uses highly optimized, stripped-down binaries. |
+| **Stability** | **Very Stable** Official CNCF project. Perfectly mirrors a heavy, production-grade Kubernetes cluster. | **Highly Stable** Official Kubernetes SIG project. Designed specifically for passing strict upstream Kubernetes conformance tests. | **Stable** Community driven project and backed by Rancher/SUSE's k3s engine. However, its heavily modified architecture can occasionally cause minor edge case discrepancies. |
+| **Docs & Community** | [**Excellent**](https://minikube.sigs.k8s.io/docs/) The oldest and most popular tool. Contains tutorials, StackOverflow answers and community guides exist. | [**Very Good**](https://kind.sigs.k8s.io) The industry standard for enterprise CI/CD. The official Kubernetes documentation is robust. | [**Good**](https://k3d.io/stable/) Rapidly growing, but a smaller community than Minikube. Often requires relying on upstream `k3s` documentation for deep troubleshooting. |
+| **Config Complexity** | **Easy - Medium** Simple for single-node setups, but configuring VM drivers, resource limits, and network bridges can become difficult. | **Medium** Requires writing custom []`kind-config.yaml`](https://kind.sigs.k8s.io/docs/user/configuration/) files to simulate multi-node architectures or map host ports. | **Easy** Features a highly programmable CLI. Complex multi-node setups and port-mappings can be done instantly via single-line [terminal commands](https://k3d.io/v5.4.6/usage/commands/k3d_cluster_create/) or also via [YAML](https://k3d.io/v5.1.0/usage/configfile/) file configuration. |
+| **Advantages** | - 100% K8s conformance.<br>- Supports many drivers (Docker, VMs, Bare-metal).<br>- Built-in GUI dashboard. | - Pure Kubernetes environment.<br>- Flawless multi-node simulation.<br>- The absolute best tool for automated CI/CD pipeline testing.<br>- Clean, ephemeral environments. | - Incredibly low footprint (runs on 512MB RAM).<br>- Built-in local registry support.<br>- Lightning-fast iteration cycles. |
+| **Disadvantages** | - Massive resource hog (requires high CPU/RAM).<br>- Multi-node cluster support is still considered somewhat experimental. | - Data is strictly ephemeral (deleted upon restart) by default.<br>- Lacks built-in Ingress/LoadBalancer (requires MetalLB). | - Not 100% "pure" K8s (replaces `etcd` with SQLite, strips out legacy cloud providers).<br>- Might fail when testing highly specific Kubernetes internals. |
+
 
 **Demo**
 
