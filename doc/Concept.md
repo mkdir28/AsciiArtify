@@ -3,7 +3,6 @@
 **AsciiArtify** plans to develop a new software product for converting images to ascii-art using Machine Learning.
 In _Concept.md_ file will be presented comparative analysis of three tools for deploying Kubernetes clusters in a local environment - minikube, kind and k3d.
 
----
 
 ## Features
 ### minikube
@@ -14,7 +13,7 @@ In _Concept.md_ file will be presented comparative analysis of three tools for d
     - Windows: Windows 10/11 and Windows Server.
     - Cloud & CI: GitHub Codespaces
 
----
+
 
 - **Supported Architecture**
     - x86-64 / AMD64: Fully supported across Linux, macOS, and Windows.
@@ -185,7 +184,6 @@ In _Concept.md_ file will be presented comparative analysis of three tools for d
      minikube start --driver=<type>
      ```
 
----
 
 To check full information about minikube, click here:
 
@@ -244,7 +242,7 @@ To check full information about minikube, click here:
 
    3. **Seamless Kubeconfig Automation**
       Upon creation, `kind` automatically generates the necessary cluster certificates, maps the dynamic Docker ports and merges the connection context directly into the host's `~/.kube/config file`. It instantly sets the active context, meaning automated deployment tools are immediately connected to the new cluster.
----
+
 
 To check full information about kind, click here:
 
@@ -315,7 +313,7 @@ To check full information about kind, click here:
    3. **Cluster Lifecycle & Resource Tuning**
       Provides high speed commands to orchestrate cluster states instantly (`k3d cluster create`, `stop`, `start` and `delete`). Resource limits are governed seamlessly by limiting the host machine's Docker daemon settings.
 
----
+
 
 To check full information about k3d, click here:
 
@@ -332,11 +330,21 @@ To check full information about k3d, click here:
 | **Deployment Speed** | **Slow** Usually takes 2-5 minutes to boot, as it pulls heavier images and often relies on full virtualization. | **Fast** Usually ready in 30-60 seconds. Uses lightweight container provisioning. | **Fastest** Usually ready in 15-30 seconds. Uses highly optimized, stripped-down binaries. |
 | **Stability** | **Very Stable** Official CNCF project. Perfectly mirrors a heavy, production-grade Kubernetes cluster. | **Highly Stable** Official Kubernetes SIG project. Designed specifically for passing strict upstream Kubernetes conformance tests. | **Stable** Community driven project and backed by Rancher/SUSE's k3s engine. However, its heavily modified architecture can occasionally cause minor edge case discrepancies. |
 | **Docs & Community** | [**Excellent**](https://minikube.sigs.k8s.io/docs/) The oldest and most popular tool. Contains tutorials, StackOverflow answers and community guides exist. | [**Very Good**](https://kind.sigs.k8s.io) The industry standard for enterprise CI/CD. The official Kubernetes documentation is robust. | [**Good**](https://k3d.io/stable/) Rapidly growing, but a smaller community than Minikube. Often requires relying on upstream `k3s` documentation for deep troubleshooting. |
-| **Config Complexity** | **Easy - Medium** Simple for single-node setups, but configuring VM drivers, resource limits, and network bridges can become difficult. | **Medium** Requires writing custom []`kind-config.yaml`](https://kind.sigs.k8s.io/docs/user/configuration/) files to simulate multi-node architectures or map host ports. | **Easy** Features a highly programmable CLI. Complex multi-node setups and port-mappings can be done instantly via single-line [terminal commands](https://k3d.io/v5.4.6/usage/commands/k3d_cluster_create/) or also via [YAML](https://k3d.io/v5.1.0/usage/configfile/) file configuration. |
+| **Config Complexity** | **Easy - Medium** Simple for single-node setups, but configuring VM drivers, resource limits, and network bridges can become difficult. | **Medium** Requires writing custom [`kind-config.yaml`](https://kind.sigs.k8s.io/docs/user/configuration/) files to simulate multi-node architectures or map host ports. | **Easy** Features a highly programmable CLI. Complex multi-node setups and port-mappings can be done instantly via single-line [terminal commands](https://k3d.io/v5.4.6/usage/commands/k3d_cluster_create/) or also via [YAML](https://k3d.io/v5.1.0/usage/configfile/) file configuration. |
 | **Advantages** | - 100% K8s conformance.<br>- Supports many drivers (Docker, VMs, Bare-metal).<br>- Built-in GUI dashboard. | - Pure Kubernetes environment.<br>- Flawless multi-node simulation.<br>- The absolute best tool for automated CI/CD pipeline testing.<br>- Clean, ephemeral environments. | - Incredibly low footprint (runs on 512MB RAM).<br>- Built-in local registry support.<br>- Lightning-fast iteration cycles. |
 | **Disadvantages** | - Massive resource hog (requires high CPU/RAM).<br>- Multi-node cluster support is still considered somewhat experimental. | - Data is strictly ephemeral (deleted upon restart) by default.<br>- Lacks built-in Ingress/LoadBalancer (requires MetalLB). | - Not 100% "pure" K8s (replaces `etcd` with SQLite, strips out legacy cloud providers).<br>- Might fail when testing highly specific Kubernetes internals. |
 
 
 **Demo**
 
-**Conclusions**
+## Conclusions
+Th best choice for **AsciiArtify** is **k3d** - lightning-fast (spins up in less than 30 seconds), has low RAM footprint and features a highly programmable CLI that allows complex multi node topology and host port mapping with a single line of terminal code or configuration in yam file. Furthermore, its built-in Traefik Ingress and LoadBalancer mean developers can access their applications immediately in the browser without dealing with networking workarounds.
+
+**K3D PoC Recommendation** 
+   **k3d** - mandatory local development environment for engineering team. This allows a team to rapidly iterate on features, test microservice networking and architecture designs without wasting hours waiting on heavy environments to boot.
+
+**KIND PoC Recommendation** 
+   Do not use **kind** for daily local coding loops if you want instant ingress/load-balancing out-of-the-box. Instead, deploy **kind** exclusively within your automated CI/CD pipelines (such as GitHub Actions or GitLab CI) to spin up ephemeral clusters, run integration tests against a pure K8s API for every code pull request and instantly destroy them.
+
+**MINIKUBE PoC Recommendation** 
+    **Minikube** more educational fallback. If startup's development team has zero prior Kubernetes experience and explicitly needs an opinionated, built-in visual graphical interface (minikube dashboard) to understand basic object interactions (Pods, Services, Deployments) it will be a good start. However, will be better to plan a quick migration to **k3d** once the team masters basic **kubectl** workflows to regain development velocity.
