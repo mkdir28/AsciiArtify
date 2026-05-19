@@ -1,10 +1,10 @@
-**Introduction**
+## Introduction
 
 **AsciiArtify** plans to develop a new software product for converting images to ascii-art using Machine Learning.
 In _Concept.md_ file will be presented comparative analysis of three tools for deploying Kubernetes clusters in a local environment - minikube, kind and k3d.
 
 
-**Features**
+## Features
 ### minikube
 
 - **Supported OS**
@@ -13,11 +13,15 @@ In _Concept.md_ file will be presented comparative analysis of three tools for d
     - Windows: Windows 10/11 and Windows Server.
     - Cloud & CI: GitHub Codespaces
 
+---
+
 - **Supported Architecture**
     - x86-64 / AMD64: Fully supported across Linux, macOS, and Windows.
     - ARM64: Fully supported (Apple M1/M2/M3, Raspberry Pi and modern ARM-based cloud instances).
     - ppc64 (PowerPC): Supported.
     - S390x (IBM Z): Supported
+
+---
 
 - **Automation Capabilities:**
 
@@ -193,13 +197,35 @@ To check full information about minikube, click here:
     - Windows: Windows 10/11 and Windows Server (typically via Docker Desktop or WSL2).
     - Cloud & CI: GitHub Codespaces and CI/CD environments supporting Docker.
 
+---
+
 - **Supported Architecture**
     - x86-64 / AMD64: Fully supported across Linux, macOS, and Windows.
     - ARM64: Fully supported (Apple Silicon: M1/M2/M3, ARM cloud instances).
     - ppc64 / ppc64le: Supported on Linux (community/CI support, not always first-class).
     - s390x (IBM Z): Supported on Linux (community/CI support).
 
+---
+
 - **Automation Capabilities:**
+1. **Ephemeral Environments**
+2. **CI/CD Pipeline Integration**
+3. **Declarative Infrastructure**
+4. **Declarative Infrastructure**
+
+---
+
+- **Additional Feature Kubernetes cluster monitoring:**
+
+---
+
+- **Additional Feature Kubernetes cluster management:**
+
+---
+
+To check full information about kind, click here:
+
+- https://kind.sigs.k8s.io
 
 ### k3d
 - **Supported OS**
@@ -208,11 +234,66 @@ To check full information about minikube, click here:
     - Windows: Windows 10/11 (via WSL2 + Docker Desktop).
     - Cloud & CI: GitHub Codespaces and other Docker-based CI environments.
 
+---
+
 - **Supported Architecture**
     - x86-64 / AMD64: Fully supported and primary target architecture.
     - ARM64: Fully supported (Apple Silicon, ARM cloud instances).
     - ppc64 (PowerPC): Not officially supported (may work in custom/community setups).
     - s390x (IBM Z): Not officially supported (very limited or experimental support).
+
+---
+
+- **Automation Capabilities:**
+1. **Declarative Infastructure**
+      - Automated Setup: Running a single command automatically parses the file to provision complex multi-node structures, network mappings and registries.
+      - Shared Team Environment: Teams can commit a k3d-config.yaml file into Git, guaranteeing that every developer and CI runner provisions identical clusters.
+
+2. **CI/CD Pipeline Integration**
+      - Automation Mechanism: It is highly compatible with Docker-in-Docker (DinD) architectures. Pipelines can spin up, run integration tests against a real Kubernetes API and destroy the cluster in seconds.
+
+      - CI Native Support: It natively integrates with GitHub Actions (via community actions), GitLab CI and Jenkins, running smoothly on standard, low resource cloud runners.
+
+3. **Built-in Registry Management**
+      - Automation Mechanism: Using the `--registry-create` flag during cluster initialization automatically provisions a local Docker registry container and pre configures the cluster’s [`registries.yaml`](https://k3d.io/stable/usage/registries/) file to trust it.
+
+      - Developer Workflow: This automates a local Build, Push, Deploy pipeline without dealing with SSL certificates or authentication overhead.
+
+4. **Custom Node & Resource Scripting**
+      - Automation Mechanism: Using [`k3d node create/delete`](https://k3d.io/v5.4.6/usage/commands/k3d_node/) commands, scripts can programmatically simulate node failures, add dedicated agent pools or dynamically scale compute capacity up or down based on current automation scripts.
+
+      - Infrastructure Mimicry: It allows automation engineers to script complex infrastructure testing scenarios (like horizontal node scaling) completely on a local laptop.
+
+---
+
+- **Additional Feature Kubernetes cluster monitoring:**
+      1. **Built-in Metrics Routing**
+         Automatically bundles the lightweight Kubernetes `metrics-server` component into the runtime engine by default. This enables immediate out of the box usage of native commands like `kubectl top nodes` and `kubectl top pods` without manual installations.
+
+      2. **Local APM Simulation**
+         Supports direct exposure of container endpoints, allowing automation scripts or developers to quickly attach Prometheus and Grafana targets to monitor cluster health and memory consumption locally.
+---
+
+- **Additional Feature Kubernetes cluster management:**
+
+   1. **Seamless Kubeconfig Injection**
+         - Automation Mechanism: By default, k3d cluster create automatically generates the necessary cluster access certificates, extracts the connection string and updates your host machine's local `~/.kube/config` file.
+
+         - Pipeline Readiness: It features an `--update-current-context` flag, ensuring that the very next command executed by an automated script or a tool like `kubectl`, `helm` or `ArgoCD` is instantly aimed at the correct k3d instance.
+
+   2. **Automated Local Workflows**
+         - Automation Mechanism: By mounting a local directory containing a raw Kubernetes resource definitions (YAML files) or Helm charts straight into the cluster’s auto-deploy path ([/var/lib/rancher/k3s/server/manifests](https://docs.k3s.io/installation/packaged-components)), k3d watches for file changes.
+
+         - Local GitOps: Whenever an automated code generator or a developer updates a _manifest_ file on the host machine, k3d automatically and instantly applies the changes to the live cluster without any manual execution.
+
+   3. **Cluster Lifecycle & Resource Tuning**
+      Provides high speed commands to orchestrate cluster states instantly (`k3d cluster create`, `stop`, `start` and `delete`). Resource limits are governed seamlessly by limiting the host machine's Docker daemon settings.
+
+---
+
+To check full information about k3d, click here:
+
+- https://k3d.io/stable/
 
 **Advantages and Disadvantages**
 
