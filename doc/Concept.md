@@ -335,16 +335,82 @@ To check full information about k3d, click here:
 | **Disadvantages** | - Massive resource hog (requires high CPU/RAM).<br>- Multi-node cluster support is still considered somewhat experimental. | - Data is strictly ephemeral (deleted upon restart) by default.<br>- Lacks built-in Ingress/LoadBalancer (requires MetalLB). | - Not 100% "pure" K8s (replaces `etcd` with SQLite, strips out legacy cloud providers).<br>- Might fail when testing highly specific Kubernetes internals. |
 
 
-**Demo**
+## Demo
+![Demo Hello World](./demo.gif)
+
+This guide demonstrates how to quickly spin up a local Kubernetes cluster, deploy a simple web application and expose it to your local machine using `k3d`.
+
+**Why use [`hashicorp/http-echo`](https://hub.docker.com/r/hashicorp/http-echo/)?**
+   For this demonstration, we use the `hashicorp/http-echo` Docker image. It is a tiny, purpose built utility designed specifically for testing. Unlike full web servers (like Nginx) that return complex, bulky HTML pages, `http-echo` returns exactly the text that was configured. This keeps the terminal output clean and makes it perfect for CLI-based demonstrations and `curl` tests.
+
+---
+
+**Step-by-Step Instructions**
+
+   1. **Create a Local Cluster**
+      First, we create a lightweight Kubernetes cluster using `k3d` (a wrapper that runs k3s inside Docker).
+
+      ```bash
+      k3d cluster create asciiartify-demo
+      ```
+      
+   2. **Deploy the Application**
+      **Note:** While you can pass arguments directly (`kubectl create deployment hello-world --image=hashicorp/http-echo -- -text=Hello-World!`), command-line parsing can sometimes cause `CrashLoopBackOff` errors depending on your shell. A safer approach is to use env.
+
+      Create the deployment using the base image.
+
+      ```bash
+      kubectl create deployment hello-world --image=hashicorp/http-echo
+      ```
+
+      Set the required environment variable (TEXT) to tell the application what to output.
+
+      ```bash
+      kubectl set env deployment/hello-world TEXT=Hello-World!
+      ```
+
+   3. **Verify the Pod Status**
+      Check if the application is running successfully. Wait until the status shows `Running`.
+
+      ```bash
+      kubectl get pods
+      ```
+
+   4. **Expose the Application**
+      By default, the pod is isolated inside the cluster. We use port-forward to map port 8080 on our local machine to port 5678 (the default port for http-echo) inside the pod.
+      `&` symbol at the end runs this process in the background so we can continue using the terminal.
+
+      ```bash
+      kubectl port-forward deployment/hello-world 8080:5678 &
+      ```
+      
+   5. **Test the Result**
+   
+      Make an HTTP request to the local port. The `-i` flag includes the HTTP response headers 200 OK to prove the server is responding correctly.
+
+      Expected Output => should be the HTTP headers followed by the clean Hello-World! text.
+   
+      ```bash
+      curl -i http://localhost:8080
+      ```
+      
+   6. **Cleanup**
+      Once you are done with the demo, you can kill the background port-forward process and delete the cluster to free up resources.
+
+      ```bash
+      kill %1
+      k3d cluster delete asciiartify-demo
+      ```
 
 ## Conclusions
-Th best choice for **AsciiArtify** is **k3d** - lightning-fast (spins up in less than 30 seconds), has low RAM footprint and features a highly programmable CLI that allows complex multi node topology and host port mapping with a single line of terminal code or configuration in yam file. Furthermore, its built-in Traefik Ingress and LoadBalancer mean developers can access their applications immediately in the browser without dealing with networking workarounds.
 
-**K3D PoC Recommendation** 
-   **k3d** - mandatory local development environment for engineering team. This allows a team to rapidly iterate on features, test microservice networking and architecture designs without wasting hours waiting on heavy environments to boot.
+   The best choice for **AsciiArtify** is **k3d** - lightning-fast (spins up in less than 30 seconds), has low RAM footprint and features a highly programmable CLI that allows complex multi node topology and host port mapping with a single line of terminal code or configuration in yam file. Furthermore, its built-in Traefik Ingress and LoadBalancer mean developers can access their applications immediately in the browser without dealing with networking workarounds.
 
-**KIND PoC Recommendation** 
-   Do not use **kind** for daily local coding loops if you want instant ingress/load-balancing out-of-the-box. Instead, deploy **kind** exclusively within your automated CI/CD pipelines (such as GitHub Actions or GitLab CI) to spin up ephemeral clusters, run integration tests against a pure K8s API for every code pull request and instantly destroy them.
+   **K3D PoC Recommendation** 
+      **k3d** - mandatory local development environment for engineering team. This allows a team to rapidly iterate on features, test microservice networking and architecture designs without wasting hours waiting on heavy environments to boot.
 
-**MINIKUBE PoC Recommendation** 
-    **Minikube** more educational fallback. If startup's development team has zero prior Kubernetes experience and explicitly needs an opinionated, built-in visual graphical interface (minikube dashboard) to understand basic object interactions (Pods, Services, Deployments) it will be a good start. However, will be better to plan a quick migration to **k3d** once the team masters basic **kubectl** workflows to regain development velocity.
+   **KIND PoC Recommendation** 
+      Do not use **kind** for daily local coding loops if you want instant ingress/load-balancing out-of-the-box. Instead, deploy **kind** exclusively within your automated CI/CD pipelines (such as GitHub Actions or GitLab CI) to spin up ephemeral clusters, run integration tests against a pure K8s API for every code pull request and instantly destroy them.
+
+   **MINIKUBE PoC Recommendation** 
+      **Minikube** more educational fallback. If startup's development team has zero prior Kubernetes experience and explicitly needs an opinionated, built-in visual graphical interface (minikube dashboard) to understand basic object interactions (Pods, Services, Deployments) it will be a good start. However, will be better to plan a quick migration to **k3d** once the team masters basic **kubectl** workflows to regain development velocity.
