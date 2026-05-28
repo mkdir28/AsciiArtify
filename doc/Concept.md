@@ -401,6 +401,7 @@ This guide demonstrates how to quickly spin up a local Kubernetes cluster, deplo
       kill %1
       k3d cluster delete asciiartify-demo
       ```
+---
 
 ## Conclusions
 
