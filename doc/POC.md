@@ -94,3 +94,8 @@ This part will check whether it is technically possible to implement the product
     ```
     Decodes the Base64 password string into plain text, allowing you to log into the Argo CD web dashboard.   
 
+---
+
+## Step-by-Step Guide access ArgoCD UI and deployment
+
+![Demo argoCD](./argocd.gif)
